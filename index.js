@@ -15,17 +15,21 @@ const accumulate = (values) => {
   .value();
 }
 
-const findParetoSeperator = (accumulated) => {
-  let bench = _.floor(_.last(accumulated).cume*0.2);
+const findParetoSeperator = (accumulated, ratio = 0.8) => {
+  let bench = _.floor(_.last(accumulated).cume*ratio);
   return _.find(accumulated, (data) => {
     return data.cume > bench;
   });
 }
 
-const rate = (values) => {
+const rate = (values, ratio = 0.8) => {
   let accumulated = accumulate(values);
-  let seperator = findParetoSeperator(accumulated);
-  return [_.ceil(seperator.cume/_.last(accumulated).cume*100), 20];
+  let seperator = findParetoSeperator(accumulated, ratio);
+  let right = _.ceil(seperator.cume/_.last(accumulated).cume*100);
+  let left = _.ceil((1-ratio)*100);
+  let rest = 100-(right+left);
+  right += rest;
+  return [right, left];
 }
 
 module.exports = {
