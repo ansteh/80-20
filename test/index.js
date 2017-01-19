@@ -19,12 +19,19 @@ const loadJSON = (filepath) => {
   });
 }
 
+const assignRates = (data) => {
+  console.log(pareto.rate(data));
+  console.log(pareto.rate(data, 1));
+  console.log(pareto.rate(data, 0.3));
+  console.log(pareto.rate(data, 0.6));
+  console.log(pareto.rate(data, 0.9));
+}
+
 const rateParetoDatasetFromFile = () => {
   return loadJSON(`${__dirname}/pareto.json`)
   .then(data => {
     let accumulated = pareto.accumulate(data);
-    console.log(accumulated);
-    console.log(pareto.rate(data))
+    assignRates(data);
   })
   .catch(console.log);
 }
@@ -35,8 +42,7 @@ const random = (count, limit) => {
 
 const rateNormalDistributedDataset = () => {
   let data = random(100, 100);
-  console.log(data);
-  console.log(pareto.rate(data));
+  assignRates(data);
 }
 
 const generatePatetoDataset = (count, limit) => {
@@ -47,7 +53,7 @@ const generatePatetoDataset = (count, limit) => {
 }
 
 let dataset = generatePatetoDataset(100, 100);
-console.log(pareto.rate(dataset));
+assignRates(dataset);
 
 // rateParetoDatasetFromFile();
 // rateNormalDistributedDataset();

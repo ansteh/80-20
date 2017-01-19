@@ -15,21 +15,17 @@ const accumulate = (values) => {
   .value();
 }
 
-const findParetoSeperator = (accumulated, ratio = 0.8) => {
-  let bench = _.floor(_.last(accumulated).cume*ratio);
-  return _.find(accumulated, (data) => {
-    return data.cume > bench;
-  });
+const findParetoMark = (accumulated, cause = 0.2) => {
+  let lastIndex = accumulated.length-1;
+  let index = _.min([_.ceil(lastIndex*cause), lastIndex]);
+  return accumulated[index];
 }
 
-const rate = (values, ratio = 0.8) => {
+const rate = (values, cause = 0.2) => {
   let accumulated = accumulate(values);
-  let seperator = findParetoSeperator(accumulated, ratio);
-  let right = _.ceil(seperator.cume/_.last(accumulated).cume*100);
-  let left = _.ceil((1-ratio)*100);
-  let rest = 100-(right+left);
-  right += rest;
-  return [right, left];
+  let mark = findParetoMark(accumulated, cause);
+  let impact = mark.cume/_.last(accumulated).cume;
+  return [impact, cause];
 }
 
 module.exports = {
